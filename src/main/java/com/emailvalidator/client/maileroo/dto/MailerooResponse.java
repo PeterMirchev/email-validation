@@ -1,9 +1,12 @@
 package com.emailvalidator.client.maileroo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Map;
 
 @Data
 @Builder
@@ -11,11 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MailerooResponse {
 
-    private String email;
-    private boolean format_valid;
-    private boolean mx_found;
-    private boolean disposable;
-    private boolean role;
-    private boolean free;
-    private String domain_suggestion;
+    private boolean success;
+    @JsonProperty("error_code")
+    private String errorCode;
+    private String message;
+    private Map<String, Object> data;
 }
