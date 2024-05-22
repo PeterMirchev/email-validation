@@ -1,38 +1,30 @@
 package com.emailvalidator.api;
 
-import com.emailvalidator.client.maileroo.dto.MailerooRequest;
-import com.emailvalidator.client.maileroo.dto.MailerooResponse;
-import com.emailvalidator.service.MailService;
+import com.emailvalidator.client.dto.EmailResponse;
+import com.emailvalidator.service.EmailService;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/mail-bulk-validations")
 @EnableFeignClients
+@CrossOrigin(origins = "http://localhost:3000")
 public class MailController {
 
-    private final MailService mailService;
+    private final EmailService mailService;
 
-    public MailController(MailService mailService) {
+    public MailController(EmailService mailService) {
         this.mailService = mailService;
     }
 
 
-    @PostMapping("/check")
-    public List<MailerooResponse> check(@RequestBody List<String> mails) {
+    @PostMapping(value = "/emails", consumes = "application/json", produces = "application/json")
+    public List<EmailResponse> validateEmails(@RequestBody List<String> mails) {
 
 
         return mailService.checkMails(mails);
     }
 
-    private MailerooRequest mapToRequest(String m) {
-        return MailerooRequest.builder()
-                .emailAddress(m)
-                .build();
-    }
 }
