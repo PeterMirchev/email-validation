@@ -1,38 +1,128 @@
+/* App.css */
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background: linear-gradient(135deg, #800080, #ff69b4);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+  font-family: 'Arial', sans-serif;
+  margin: 0; /* Ensure no margins are added */
+  padding: 0; /* Ensure no paddings are added */
+}
+
+.App-header {
+  background: rgba(0, 0, 139, 0.5); /* Dark blue with transparency */
+  padding: 0; /* Remove padding */
+  border-radius: 0; /* Remove border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100vh; /* Make the header fill the whole viewport height */
+}
+
+.App-top {
+  flex: 1;
+  display: flex;
+  align-items: flex-start; /* Align items to the start (top) */
+  justify-content: center;
+}
+
+.App-welcome {
+  font-size: 2rem; /* Increase font size */
+  margin-top: 30px; /* Add margin to push it up */
+}
+
+.App-middle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -400px; /* Move the image up */
+}
+
+.App-info {
+  font-size: 1.5rem;
+  color: #add8e6; /* Light blue */
+  margin: 20px;
+}
+
+.App-bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: -200px; /* Move the buttons and messages up */
+}
+
+.App-static-image {
+  width: 100%;
+  height: auto; /* Ensure the image maintains its aspect ratio */
+  display: block;
+  margin: 0; /* Remove any default margin */
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #add8e6; /* Light blue */
+}
+
+button {
+  background-color: #00008b; /* Dark blue */
+  border: none;
+  border-radius: 25px;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0000cd; /* Medium blue */
+}
+
+button:active {
+  background-color: #00008b; /* Dark blue */
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 139, 0.5); /* Dark blue with transparency */
+}
+
+input[type="file"] {
+  display: none;
+}
+
+p {
+  font-size: 1.25rem;
+  margin: 20px 0;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #add8e6; /* Light blue */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }

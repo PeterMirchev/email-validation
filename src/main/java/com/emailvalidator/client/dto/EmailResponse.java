@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 public class EmailResponse {
 
-    private String verifier;
     private String email;
     private String response;
 }

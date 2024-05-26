@@ -1,15 +1,23 @@
 package com.emailvalidator.service;
 
+import com.emailvalidator.client.dto.EmailCollectionResponse;
 import com.emailvalidator.client.dto.EmailResponse;
 import com.emailvalidator.client.emaillistverify.EmailListVerifyClient;
 import com.emailvalidator.config.EmailListVerifyProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.emailvalidator.config.Messages.*;
 
 @Service
 public class EmailService {
@@ -28,7 +36,15 @@ public class EmailService {
         this.emailListVerifyClient = emailListVerifyClient;
     }
 
-    public List<EmailResponse> checkMails(List<String> emails) {
+    public EmailCollectionResponse checkMails(MultipartFile file) {
+
+        List<String> emails;
+
+        try {
+            emails = parseEmailsFromFile(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         List<EmailResponse> responses = new ArrayList<>();
         String secret = emailListVerifyProperties.getSecret();
@@ -44,13 +60,15 @@ public class EmailService {
             sendProgressUpdate(size, totalEmailsProcessed.get());
         });
 
-        return responses;
+        return EmailCollectionResponse.builder()
+                .verifier(VERIFIER)
+                .emails(responses)
+                .build();
     }
 
     private EmailResponse mapToResponse(String response, String email) {
 
         return EmailResponse.builder()
-                .verifier("emaillistverify.com")
                 .email(email)
                 .response(response)
                 .build();
@@ -59,7 +77,32 @@ public class EmailService {
     private void sendProgressUpdate(int size, int totalEmailsProcessed) {
 
         double progressPercentage = ((double) totalEmailsProcessed / size) * 100;
-        System.out.printf("File Progress: %.2f%%%n", progressPercentage);
-        messagingTemplate.convertAndSend("/topic/progress", progressPercentage);
+        System.out.printf(FILE_PROGRESS, progressPercentage);
+        messagingTemplate.convertAndSend(TOPIC_PROGRESS, progressPercentage);
+    }
+
+    private List<String> parseEmailsFromFile(MultipartFile file) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+
+        List<String> emails = new ArrayList<>();
+
+        String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+
+        switch (extension) {
+            case "csv":
+                reader.lines().forEach(emails::add);
+                break;
+            case "txt":
+            case "file":
+                reader.lines()
+                        .map(line -> line.split("[, ]+"))
+                        .forEach(emailsArray -> emails.addAll(Arrays.asList(emailsArray)));
+                break;
+            default:
+                throw new IllegalStateException(UNSUPPORTED_FILE_FORMAT);
+        }
+
+        return emails;
     }
 }
